@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>슈퍼 아줌마의 단서</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script type="text/javascript">
+      function shareHint() {
+        const list = document.getElementById('shared-hints');
+        const li = document.createElement('li');
+        li.innerText = '슈퍼 아줌마: 사건 직전 수상한 사람을 봤다.';
+        list.appendChild(li);
+      }
+    </script>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <main class="p-4 max-w-xl mx-auto bg-white shadow rounded mt-10">
+      <h1 class="text-xl font-bold">내 역할: 슈퍼 아줌마</h1>
+      <p class="mt-4">단서: 사건 직전 수상한 사람을 봤다.</p>
+      <button onclick="shareHint()" class="mt-4 bg-green-500 text-white p-2 rounded">단서 공유하기</button>
+      <div class="mt-6">
+        <h2 class="text-lg font-semibold mb-2">공유된 단서들</h2>
+        <ul id="shared-hints" class="list-disc list-inside space-y-1"></ul>
+      </div>
+      <div class="mt-6">
+        <a href="index.html" class="text-blue-500 underline">처음으로 돌아가기</a>
+      </div>
+    </main>
+  </body>
+</html>
