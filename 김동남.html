@@ -64,10 +64,10 @@
     <section id="basement" style="display:none;"><h2 class="text-xl font-bold">지하실 입구</h2><button onclick="goTo('lobby')" class="mt-4 bg-gray-200 p-2 rounded">로비로 돌아가기</button></section>
 
     <!-- 쪽지 팝업 -->
-    <div id="note-popup" class="hidden mt-6 p-4 bg-yellow-100 border rounded">
+    <section id="note-popup" class="hidden mt-6 p-4 bg-yellow-100 border rounded">
       <p class="mb-4">📄 <strong>다락문의 비밀번호는 4722란다 아가야</strong></p>
       <button onclick="closeNote()" class="bg-blue-500 text-white p-2 rounded">로비로 돌아가기</button>
-    </div>
+    </section>
 
     <!-- 아이템창 -->
     <section class="mt-10 border-t pt-4">
@@ -83,11 +83,10 @@
     }
 
     function goTo(locationId) {
-      const sections = ['lobby', 'front-door', 'back-door', 'second-floor', 'basement'];
+      const sections = ['lobby', 'front-door', 'back-door', 'second-floor', 'basement', 'note-popup'];
       sections.forEach(id => {
         document.getElementById(id).style.display = 'none';
       });
-      document.getElementById('note-popup').classList.add('hidden');
       if (locationId) {
         document.getElementById(locationId).style.display = 'block';
       }
@@ -138,8 +137,7 @@
           btn.className = 'underline text-blue-600';
           btn.onclick = () => {
             if (item === '누군가의 쪽지') {
-              document.getElementById('note-popup').classList.remove('hidden');
-              goTo('');
+              goTo('note-popup');
             } else {
               alert(item + '에는 특별한 것이 없습니다.');
             }
@@ -164,7 +162,6 @@
     }
 
     function closeNote() {
-      document.getElementById('note-popup').classList.add('hidden');
       goTo('lobby');
     }
 
