@@ -88,7 +88,9 @@
         document.getElementById(id).style.display = 'none';
       });
       document.getElementById('note-popup').classList.add('hidden');
-      document.getElementById(locationId).style.display = 'block';
+      if (locationId) {
+        document.getElementById(locationId).style.display = 'block';
+      }
     }
 
     function checkPassword(door) {
@@ -137,7 +139,7 @@
           btn.onclick = () => {
             if (item === '누군가의 쪽지') {
               document.getElementById('note-popup').classList.remove('hidden');
-              goTo(''); // hide others
+              goTo('');
             } else {
               alert(item + '에는 특별한 것이 없습니다.');
             }
@@ -167,8 +169,8 @@
     }
 
     function initCharacter() {
-      const startingItems = ['열쇠'];
-      setCookie('dongnam_items', JSON.stringify(startingItems));
+      // 기본 아이템 없이 시작
+      setCookie('dongnam_items', JSON.stringify([]));
       updateInventory();
     }
 
