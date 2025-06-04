@@ -1,106 +1,178 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>김동남</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap" rel="stylesheet">
-    <style>
-      .brush-font {
-        font-family: 'Nanum Brush Script', cursive;
-      }
-    </style>
-    <script>
-      function showNextSection() {
-        document.getElementById('intro').style.display = 'none';
-        document.getElementById('lobby').style.display = 'block';
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>김동남</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap" rel="stylesheet">
+  <style>
+    .brush-font {
+      font-family: 'Nanum Brush Script', cursive;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <main class="p-4 max-w-2xl mx-auto bg-white shadow rounded mt-10">
+    <header class="mb-6">
+      <h1 class="text-4xl brush-font text-left text-gray-800">김동남</h1>
+    </header>
 
-      function goTo(locationId) {
-        const sections = ['lobby', 'front-door', 'back-door', 'second-floor', 'basement'];
-        sections.forEach(id => {
-          document.getElementById(id).style.display = 'none';
-        });
-        document.getElementById(locationId).style.display = 'block';
-      }
+    <!-- 등장인물 소개 -->
+    <section id="intro">
+      <h2 class="text-xl font-semibold mb-4">등장 인물 소개</h2>
+      <ul class="list-disc list-inside text-lg text-gray-700 mb-4">
+        <li>주인이 없는 저택에 들어온 외부인</li>
+        <li>저택의 모든 문이 잠김으로서 나갈 방법을 찾는 중</li>
+      </ul>
+      <button onclick="showNextSection(); initCharacter();" class="bg-blue-500 text-white p-2 rounded">계속</button>
+    </section>
 
-      function checkPassword(door) {
-        const inputId = door === 'front' ? 'front-password' : 'back-password';
-        const value = document.getElementById(inputId).value.trim();
-        const correct = door === 'front' ? 'Not_Found' : '수정할거임';
+    <!-- 저택의 로비 -->
+    <section id="lobby" style="display:none;">
+      <h2 class="text-xl font-bold mb-2">현재 위치: 저택의 로비</h2>
+      <div class="grid grid-cols-2 gap-2 mb-4">
+        <button onclick="goTo('front-door')" class="bg-gray-200 p-2 rounded">저택의 정문</button>
+        <button onclick="goTo('back-door')" class="bg-gray-200 p-2 rounded">저택의 후문</button>
+        <button onclick="goTo('second-floor')" class="bg-gray-200 p-2 rounded">2층 로비</button>
+        <button onclick="goTo('basement')" class="bg-gray-200 p-2 rounded">지하실 입구</button>
+      </div>
+    </section>
 
-        if (value === correct) {
-          window.location.href = 'Goal_In_Congratulation_sk2asfxcnjss9db.html';
-        } else {
-          alert('비밀번호가 맞지 않습니다.');
-        }
-      }
-    </script>
-  </head>
-  <body class="bg-gray-100 min-h-screen">
-    <main class="p-4 max-w-2xl mx-auto bg-white shadow rounded mt-10">
-      <header class="mb-6">
-        <h1 class="text-4xl brush-font text-left text-gray-800">김동남</h1>
-      </header>
+    <!-- 저택의 정문 -->
+    <section id="front-door" style="display:none;">
+      <h2 class="text-xl font-bold mb-2">저택의 정문</h2>
+      <input type="text" id="front-password" placeholder="비밀번호 입력" class="border p-2 mr-2"/>
+      <button onclick="checkPassword('front')" class="bg-green-500 text-white p-2 rounded">입력</button>
 
-      <!-- 등장인물 소개 -->
-      <section id="intro">
-        <h2 class="text-xl font-semibold mb-4">등장 인물 소개</h2>
-        <ul class="list-disc list-inside text-lg text-gray-700 mb-4">
-          <li>주인이 없는 저택에 들어온 외부인</li>
-          <li>저택의 모든 문이 잠김으로서 나갈 방법을 찾는 중</li>
-        </ul>
-        <button onclick="showNextSection()" class="bg-blue-500 text-white p-2 rounded">계속</button>
-      </section>
-
-      <!-- 저택의 로비 -->
-      <section id="lobby" style="display:none;">
-        <h2 class="text-xl font-bold mb-2">현재 위치: 저택의 로비</h2>
-        <p class="mb-4">웅장한 샹들리에와 먼지가 쌓인 카펫이 깔린 공간. 밖으로 나가는 문은 굳게 닫혀 있다.</p>
-        <div class="grid grid-cols-2 gap-2">
-          <button onclick="goTo('front-door')" class="bg-gray-200 p-2 rounded">저택의 정문</button>
-          <button onclick="goTo('back-door')" class="bg-gray-200 p-2 rounded">저택의 후문</button>
-          <button onclick="goTo('second-floor')" class="bg-gray-200 p-2 rounded">2층 로비</button>
-          <button onclick="goTo('basement')" class="bg-gray-200 p-2 rounded">지하실 입구</button>
+      <div class="mt-4">
+        <button onclick="toggleExamine()" class="bg-yellow-300 text-black p-2 rounded">살펴보기</button>
+        <div id="examine-options" class="mt-2 hidden">
+          <ul class="list-disc list-inside">
+            <li><button class="underline text-blue-600" onclick="alert('열쇠 구멍에는 아무것도 없어 보인다.')">열쇠 구멍</button></li>
+            <li><button class="underline text-blue-600" onclick="alert('문 밑에는 먼지 뿐이다.')">문 밑</button></li>
+            <li><button class="underline text-blue-600" onclick="addItem('누군가의 쪽지')">신발장</button></li>
+          </ul>
         </div>
-      </section>
+      </div>
+      <button onclick="goTo('lobby')" class="mt-4 bg-gray-200 p-2 rounded">로비로 돌아가기</button>
+    </section>
 
-      <!-- 저택의 정문 -->
-      <section id="front-door" style="display:none;">
-        <h2 class="text-xl font-bold mb-2">현재 위치: 저택의 정문</h2>
-        <p class="mb-2">문은 굳게 잠겨 있으며 비밀번호를 입력해야 열 수 있다.</p>
-        <input type="text" id="front-password" class="border p-2 mb-2 w-full" placeholder="비밀번호 입력">
-        <button onclick="checkPassword('front')" class="bg-green-500 text-white p-2 rounded w-full mb-4">비밀번호 확인</button>
-        <button onclick="goTo('lobby')" class="bg-blue-500 text-white p-2 rounded">로비로 돌아가기</button>
-      </section>
+    <!-- 다른 공간들 (기본 표시 안함) -->
+    <section id="back-door" style="display:none;"><h2 class="text-xl font-bold">저택의 후문</h2><button onclick="goTo('lobby')" class="mt-4 bg-gray-200 p-2 rounded">로비로 돌아가기</button></section>
+    <section id="second-floor" style="display:none;"><h2 class="text-xl font-bold">2층 로비</h2><button onclick="goTo('lobby')" class="mt-4 bg-gray-200 p-2 rounded">로비로 돌아가기</button></section>
+    <section id="basement" style="display:none;"><h2 class="text-xl font-bold">지하실 입구</h2><button onclick="goTo('lobby')" class="mt-4 bg-gray-200 p-2 rounded">로비로 돌아가기</button></section>
 
-      <!-- 저택의 후문 -->
-      <section id="back-door" style="display:none;">
-        <h2 class="text-xl font-bold mb-2">현재 위치: 저택의 후문</h2>
-        <p class="mb-2">철문이 잠겨 있으며 비밀번호를 입력해야 열 수 있다.</p>
-        <input type="text" id="back-password" class="border p-2 mb-2 w-full" placeholder="비밀번호 입력">
-        <button onclick="checkPassword('back')" class="bg-green-500 text-white p-2 rounded w-full mb-4">비밀번호 확인</button>
-        <button onclick="goTo('lobby')" class="bg-blue-500 text-white p-2 rounded">로비로 돌아가기</button>
-      </section>
+    <!-- 아이템 상호작용 영역 -->
+    <div id="note-popup" class="hidden mt-6 p-4 bg-yellow-100 border rounded">
+      <p class="mb-4">📄 쪽지: <strong>“다락문의 비밀번호는 4722란다 아가야”</strong></p>
+      <button onclick="closeNote()" class="bg-blue-500 text-white p-2 rounded">로비로 돌아가기</button>
+    </div>
 
-      <!-- 2층 로비 -->
-      <section id="second-floor" style="display:none;">
-        <h2 class="text-xl font-bold mb-2">현재 위치: 2층 로비</h2>
-        <p class="mb-4">낡은 계단을 올라가면 낯선 방들이 양옆으로 늘어서 있다.</p>
-        <button onclick="goTo('lobby')" class="bg-blue-500 text-white p-2 rounded">로비로 돌아가기</button>
-      </section>
+    <!-- 아이템창 -->
+    <section class="mt-10 border-t pt-4">
+      <h2 class="text-lg font-bold mb-2">🧳 아이템창</h2>
+      <ul id="inventory-list" class="list-disc list-inside text-gray-800"></ul>
+    </section>
+  </main>
 
-      <!-- 지하실 입구 -->
-      <section id="basement" style="display:none;">
-        <h2 class="text-xl font-bold mb-2">현재 위치: 지하실 입구</h2>
-        <p class="mb-4">불이 꺼진 계단 아래에서 싸늘한 공기가 올라온다. 무언가 숨어 있을지도 모른다.</p>
-        <button onclick="goTo('lobby')" class="bg-blue-500 text-white p-2 rounded">로비로 돌아가기</button>
-      </section>
-    </main>
-  </body>
+  <script>
+    function showNextSection() {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('lobby').style.display = 'block';
+    }
+
+    function goTo(locationId) {
+      const sections = ['lobby', 'front-door', 'back-door', 'second-floor', 'basement'];
+      sections.forEach(id => {
+        document.getElementById(id).style.display = 'none';
+      });
+      document.getElementById('note-popup').classList.add('hidden');
+      document.getElementById(locationId).style.display = 'block';
+    }
+
+    function checkPassword(door) {
+      const inputId = door === 'front' ? 'front-password' : 'back-password';
+      const value = document.getElementById(inputId).value.trim();
+      const correct = door === 'front' ? 'Not_Found' : '수정할거임';
+
+      if (value === correct) {
+        window.location.href = 'Goal_In_Congratulation_sk2asfxcnjss9db.html';
+      } else {
+        alert('비밀번호가 맞지 않습니다.');
+      }
+    }
+
+    function toggleExamine() {
+      const div = document.getElementById('examine-options');
+      div.classList.toggle('hidden');
+    }
+
+    function setCookie(name, value, days = 7) {
+      const expires = new Date(Date.now() + days * 86400000).toUTCString();
+      document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+    }
+
+    function getCookie(name) {
+      const cookies = document.cookie.split('; ');
+      for (const cookie of cookies) {
+        const [key, val] = cookie.split('=');
+        if (key === name) return decodeURIComponent(val);
+      }
+      return null;
+    }
+
+    function updateInventory() {
+      const items = getCookie('dongnam_items');
+      const list = document.getElementById('inventory-list');
+      list.innerHTML = '';
+
+      if (items) {
+        const itemArray = JSON.parse(items);
+        itemArray.forEach(item => {
+          const li = document.createElement('li');
+          const btn = document.createElement('button');
+          btn.textContent = item;
+          btn.className = 'underline text-blue-600';
+          btn.onclick = () => {
+            if (item === '누군가의 쪽지') {
+              document.getElementById('note-popup').classList.remove('hidden');
+              goTo(''); // hide others
+            } else {
+              alert(item + '에는 특별한 것이 없습니다.');
+            }
+          };
+          li.appendChild(btn);
+          list.appendChild(li);
+        });
+      }
+    }
+
+    function addItem(itemName) {
+      const items = getCookie('dongnam_items');
+      let itemArray = items ? JSON.parse(items) : [];
+      if (!itemArray.includes(itemName)) {
+        itemArray.push(itemName);
+        setCookie('dongnam_items', JSON.stringify(itemArray));
+        updateInventory();
+        alert(`"${itemName}" 아이템을 획득했습니다.`);
+      } else {
+        alert('이미 획득한 아이템입니다.');
+      }
+    }
+
+    function closeNote() {
+      document.getElementById('note-popup').classList.add('hidden');
+      goTo('lobby');
+    }
+
+    function initCharacter() {
+      const startingItems = ['열쇠'];
+      setCookie('dongnam_items', JSON.stringify(startingItems));
+      updateInventory();
+    }
+
+    window.onload = updateInventory;
+  </script>
+</body>
 </html>
-
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4882947004593379"
-     crossorigin="anonymous"></script>
