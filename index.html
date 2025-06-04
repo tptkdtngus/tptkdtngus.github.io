@@ -2,30 +2,44 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>추리 게임 시작</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>추리 게임 - 역할 선택</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      font-size: 2em;
+    }
+    .role-button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <h1>추리 게임: 역할 선택</h1>
-  <ul>
-    <li><button onclick="startGame('김동남', 'kimdongnam.html')">김동남</button></li>
-    <li><a href="길고양이.html">길 고양이</a></li>
-    <li><a href="집사.html">집사</a></li>
-    <li><a href="슈퍼아줌마.html">슈퍼 아줌마</a></li>
-    <li><a href="요리사.html">요리사</a></li>
-  </ul>
+  <h1>역할을 선택하세요</h1>
+  <button class="role-button" onclick="goToRole('김동남')">김동남</button>
+  <button class="role-button" onclick="goToRole('길 고양이')">길 고양이</button>
+  <button class="role-button" onclick="goToRole('집사')">집사</button>
+  <button class="role-button" onclick="goToRole('슈퍼 아줌마')">슈퍼 아줌마</button>
+  <button class="role-button" onclick="goToRole('요리사')">요리사</button>
 
   <script>
-    function setCookie(name, value, days = 7) {
-      const expires = new Date(Date.now() + days * 86400000).toUTCString();
-      document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
-    }
-
-    function startGame(character, link) {
-      if (character === "김동남") {
-        setCookie('dongnam_items', JSON.stringify([]));
-      }
-      window.location.href = link;
+    function goToRole(role) {
+      const roleMap = {
+        "김동남": "김동남.html",
+        "길 고양이": "길고양이.html",
+        "집사": "집사.html",
+        "슈퍼 아줌마": "슈퍼아줌마.html",
+        "요리사": "요리사.html"
+      };
+      window.location.href = roleMap[role];
     }
   </script>
 </body>
