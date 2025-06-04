@@ -58,14 +58,14 @@
       <button onclick="goTo('lobby')" class="mt-4 bg-gray-200 p-2 rounded">로비로 돌아가기</button>
     </section>
 
-    <!-- 다른 공간들 (기본 표시 안함) -->
+    <!-- 다른 공간들 -->
     <section id="back-door" style="display:none;"><h2 class="text-xl font-bold">저택의 후문</h2><button onclick="goTo('lobby')" class="mt-4 bg-gray-200 p-2 rounded">로비로 돌아가기</button></section>
     <section id="second-floor" style="display:none;"><h2 class="text-xl font-bold">2층 로비</h2><button onclick="goTo('lobby')" class="mt-4 bg-gray-200 p-2 rounded">로비로 돌아가기</button></section>
     <section id="basement" style="display:none;"><h2 class="text-xl font-bold">지하실 입구</h2><button onclick="goTo('lobby')" class="mt-4 bg-gray-200 p-2 rounded">로비로 돌아가기</button></section>
 
-    <!-- 아이템 상호작용 영역 -->
+    <!-- 쪽지 팝업 -->
     <div id="note-popup" class="hidden mt-6 p-4 bg-yellow-100 border rounded">
-      <p class="mb-4">📄 쪽지: <strong>“다락문의 비밀번호는 4722란다 아가야”</strong></p>
+      <p class="mb-4">📄 <strong>다락문의 비밀번호는 4722란다 아가야</strong></p>
       <button onclick="closeNote()" class="bg-blue-500 text-white p-2 rounded">로비로 돌아가기</button>
     </div>
 
@@ -169,7 +169,6 @@
     }
 
     function initCharacter() {
-      // 기본 아이템 없이 시작
       setCookie('dongnam_items', JSON.stringify([]));
       updateInventory();
     }
