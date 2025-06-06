@@ -1,31 +1,41 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>집주인의 딸</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      font-family: "Brush Script MT", cursive;
+      font-size: 2em;
+    }
+    main {
       padding: 20px;
     }
-    .title {
-      font-size: 2em;
-      font-weight: bold;
-      font-family: "Brush Script MT", cursive;
-      margin-bottom: 10px;
-    }
     .section {
-      margin-top: 30px;
+      margin: 20px 0;
     }
     .btn {
       display: inline-block;
-      margin: 10px;
+      margin: 10px 5px;
       padding: 10px 20px;
       background-color: #444;
       color: white;
       border: none;
       cursor: pointer;
+      border-radius: 5px;
+    }
+    .btn:hover {
+      background-color: #666;
     }
     #location {
       font-weight: bold;
@@ -35,33 +45,35 @@
   </style>
 </head>
 <body>
-  <div class="title">집주인의 딸</div>
+  <header>집주인의 딸</header>
 
-  <div id="content">
-    <p>어디로 간지 모르는 집 주인의 딸</p>
-    <p>저택의 문이 모두 잠겨 이유를 찾는 중</p>
-    <button class="btn" onclick="startGame()">계속</button>
-  </div>
-
-  <div id="game" style="display:none">
-    <div id="location">현재 위치: 저택의 안방</div>
-
-    <div class="section">
-      <p>어디로 이동하시겠습니까?</p>
-      <button class="btn" onclick="moveTo('다락방')">다락방</button>
-      <button class="btn" onclick="moveTo('접객실')">접객실</button>
-      <button class="btn" onclick="moveTo('집무실')">집무실</button>
-      <button class="btn" onclick="moveTo('저택의 정문')">저택의 정문</button>
+  <main>
+    <div id="intro">
+      <p>어디로 간지 모르는 집 주인의 딸</p>
+      <p>저택의 문이 모두 잠겨 이유를 찾는 중</p>
+      <button class="btn" onclick="startGame()">계속</button>
     </div>
 
-    <div class="section">
-      <button class="btn" onclick="moveTo('저택의 안방')">저택의 안방으로 돌아가기</button>
+    <div id="game" style="display:none">
+      <div id="location">현재 위치: 저택의 안방</div>
+
+      <div class="section">
+        <p>어디로 이동하시겠습니까?</p>
+        <button class="btn" onclick="moveTo('다락방')">다락방</button>
+        <button class="btn" onclick="moveTo('접객실')">접객실</button>
+        <button class="btn" onclick="moveTo('집무실')">집무실</button>
+        <button class="btn" onclick="moveTo('저택의 정문')">저택의 정문</button>
+      </div>
+
+      <div class="section">
+        <button class="btn" onclick="moveTo('저택의 안방')">안방으로 돌아가기</button>
+      </div>
     </div>
-  </div>
+  </main>
 
   <script>
     function startGame() {
-      document.getElementById("content").style.display = "none";
+      document.getElementById("intro").style.display = "none";
       document.getElementById("game").style.display = "block";
     }
 
