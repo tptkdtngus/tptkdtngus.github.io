@@ -1,31 +1,73 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>집사의 단서</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script type="text/javascript">
-      function shareHint() {
-        const list = document.getElementById('shared-hints');
-        const li = document.createElement('li');
-        li.innerText = '집사: 고양이의 이상 행동을 관찰했다.';
-        list.appendChild(li);
-      }
-    </script>
-  </head>
-  <body class="bg-gray-100 min-h-screen">
-    <main class="p-4 max-w-xl mx-auto bg-white shadow rounded mt-10">
-      <h1 class="text-xl font-bold">내 역할: 집사</h1>
-      <p class="mt-4">단서: 고양이의 이상 행동을 관찰했다.</p>
-      <button onclick="shareHint()" class="mt-4 bg-green-500 text-white p-2 rounded">단서 공유하기</button>
-      <div class="mt-6">
-        <h2 class="text-lg font-semibold mb-2">공유된 단서들</h2>
-        <ul id="shared-hints" class="list-disc list-inside space-y-1"></ul>
-      </div>
-      <div class="mt-6">
-        <a href="index.html" class="text-blue-500 underline">처음으로 돌아가기</a>
-      </div>
-    </main>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>집주인의 딸</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+    }
+    .title {
+      font-size: 2em;
+      font-weight: bold;
+      font-family: "Brush Script MT", cursive;
+      margin-bottom: 10px;
+    }
+    .section {
+      margin-top: 30px;
+    }
+    .btn {
+      display: inline-block;
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #444;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #location {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="title">집주인의 딸</div>
+
+  <div id="content">
+    <p>어디로 간지 모르는 집 주인의 딸</p>
+    <p>저택의 문이 모두 잠겨 이유를 찾는 중</p>
+    <button class="btn" onclick="startGame()">계속</button>
+  </div>
+
+  <div id="game" style="display:none">
+    <div id="location">현재 위치: 저택의 안방</div>
+
+    <div class="section">
+      <p>어디로 이동하시겠습니까?</p>
+      <button class="btn" onclick="moveTo('다락방')">다락방</button>
+      <button class="btn" onclick="moveTo('접객실')">접객실</button>
+      <button class="btn" onclick="moveTo('집무실')">집무실</button>
+      <button class="btn" onclick="moveTo('저택의 정문')">저택의 정문</button>
+    </div>
+
+    <div class="section">
+      <button class="btn" onclick="moveTo('저택의 안방')">저택의 안방으로 돌아가기</button>
+    </div>
+  </div>
+
+  <script>
+    function startGame() {
+      document.getElementById("content").style.display = "none";
+      document.getElementById("game").style.display = "block";
+    }
+
+    function moveTo(place) {
+      document.getElementById("location").innerText = "현재 위치: " + place;
+    }
+  </script>
+</body>
 </html>
