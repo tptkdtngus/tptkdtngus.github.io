@@ -1,84 +1,240 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>집주인의 딸</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap" rel="stylesheet" />
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f0f0f0;
-    }
-    header {
-      background-color: #333;
-      color: #fff;
-      padding: 20px;
-      font-family: "Brush Script MT", cursive;
-      font-size: 2em;
-    }
-    main {
-      padding: 20px;
-    }
-    .section {
-      margin: 20px 0;
-    }
-    .btn {
-      display: inline-block;
-      margin: 10px 5px;
-      padding: 10px 20px;
-      background-color: #444;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    .btn:hover {
-      background-color: #666;
-    }
-    #location {
-      font-weight: bold;
-      font-size: 1.2em;
-      margin-top: 20px;
+    .brush-font {
+      font-family: 'Nanum Brush Script', cursive;
     }
   </style>
 </head>
-<body>
-  <header>집주인의 딸</header>
+<body class="bg-gray-100 min-h-screen">
+  <main class="p-6 max-w-3xl mx-auto bg-white shadow-md rounded mt-10">
+    <header class="mb-8">
+      <h1 class="text-4xl brush-font text-gray-800">집주인의 딸</h1>
+    </header>
 
-  <main>
-    <div id="intro">
-      <p>어디로 간지 모르는 집 주인의 딸</p>
-      <p>저택의 문이 모두 잠겨 이유를 찾는 중</p>
-      <button class="btn" onclick="startGame()">계속</button>
-    </div>
+    <section id="intro">
+      <h2 class="text-2xl font-semibold mb-6">등장인물 소개</h2>
+      <div class="flex items-center bg-gray-50 rounded p-4 shadow">
+        <div class="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 text-sm mr-6">
+          사진 없음
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-2">집주인의 딸</h3>
+          <p class="text-gray-700 leading-relaxed">
+            저택에 갇혀 있는 주인공으로, 저택의 비밀을 파헤치려 노력합니다.<br />
+            침착하고 용감하며, 비밀번호를 찾아 저택을 탈출하려 합니다.
+          </p>
+        </div>
+      </div>
+      <button id="continueBtn" class="mt-8 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">계속</button>
+    </section>
 
-    <div id="game" style="display:none">
-      <div id="location">현재 위치: 저택의 안방</div>
-
-      <div class="section">
-        <p>어디로 이동하시겠습니까?</p>
-        <button class="btn" onclick="moveTo('다락방')">다락방</button>
-        <button class="btn" onclick="moveTo('접객실')">접객실</button>
-        <button class="btn" onclick="moveTo('집무실')">집무실</button>
-        <button class="btn" onclick="moveTo('저택의 정문')">저택의 정문</button>
+    <section id="game" class="hidden mt-6">
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">현재 위치: <span id="location">저택의 안방</span></h2>
       </div>
 
-      <div class="section">
-        <button class="btn" onclick="moveTo('저택의 안방')">안방으로 돌아가기</button>
+      <div class="grid grid-cols-2 gap-4 mb-6" id="move-buttons">
+        <button onclick="attemptMove('다락방')" class="bg-gray-200 p-3 rounded hover:bg-gray-300">다락방</button>
+        <button onclick="attemptMove('접객실')" class="bg-gray-200 p-3 rounded hover:bg-gray-300">접객실</button>
+        <button onclick="attemptMove('집무실')" class="bg-gray-200 p-3 rounded hover:bg-gray-300">집무실</button>
+        <button onclick="attemptMove('저택의 정문')" class="bg-gray-200 p-3 rounded hover:bg-gray-300">저택의 정문</button>
       </div>
-    </div>
+
+      <button id="backToRoomBtn" onclick="moveTo('저택의 안방')" class="mb-6 bg-gray-300 p-3 rounded hover:bg-gray-400 hidden">저택의 안방으로 돌아가기</button>
+
+      <div id="description" class="mb-6 p-4 bg-gray-50 rounded border border-gray-200 text-gray-700">
+        저택의 안방입니다. 조용하고 아늑한 공간입니다.
+      </div>
+
+      <div id="attic-password-area" class="mb-4 hidden">
+        <input id="attic-password" type="password" placeholder="비밀번호 입력" class="border p-2 rounded mr-2" />
+        <button onclick="checkAtticPassword()" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">입력</button>
+      </div>
+
+      <div id="attic-interact-area" class="mb-4 hidden">
+        <button onclick="toggleAtticExamine()" class="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500">살펴보기</button>
+        <div id="attic-examine-options" class="mt-2 hidden">
+          <ul class="list-disc list-inside">
+            <li><button onclick="atticExamine('상자')" class="underline text-blue-600">상자</button></li>
+            <li><button onclick="atticExamine('창 밖')" class="underline text-blue-600">창 밖</button></li>
+            <li><button onclick="atticExamine('일기장')" class="underline text-blue-600">일기장</button></li>
+            <li><button onclick="atticExamine('서랍 안')" class="underline text-blue-600">서랍 안</button></li>
+          </ul>
+        </div>
+      </div>
+
+      <section id="inventory" class="border-t pt-4">
+        <h3 class="text-lg font-semibold mb-3">아이템창</h3>
+        <div id="items" class="flex flex-wrap gap-2 text-gray-800"></div>
+      </section>
+
+      <div id="item-description-area" class="mt-6 p-4 bg-gray-100 rounded border border-gray-300 hidden">
+        <p id="item-description-text" class="mb-4 text-gray-700"></p>
+        <button onclick="closeItemDescription()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">저택의 안방으로 돌아가기</button>
+      </div>
+    </section>
   </main>
 
   <script>
-    function startGame() {
-      document.getElementById("intro").style.display = "none";
-      document.getElementById("game").style.display = "block";
+    window.inventory = [];
+
+    function setCookie(name, value, days) {
+      let expires = "";
+      if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+      const nameEQ = name + "=";
+      const ca = document.cookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+    }
+
+    document.getElementById('continueBtn').addEventListener('click', () => {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('game').classList.remove('hidden');
+      const savedInventory = getCookie('inventory');
+      window.inventory = savedInventory ? JSON.parse(savedInventory) : [];
+      updateInventory();
+      moveTo('저택의 안방');
+    });
+
+    const descriptions = {
+      '저택의 안방': '저택의 안방입니다. 조용하고 아늑한 공간입니다.',
+      '다락방': '다락방입니다. 잠긴 문을 열기 위해 비밀번호를 입력하세요.',
+      '접객실': '접객실입니다. 이곳에는 특별한 것이 없습니다.',
+      '집무실': '집무실입니다. 조용한 공간입니다.',
+      '저택의 정문': '튼튼한 나무문이 닫혀있습니다.'
+    };
+
+    let currentLocation = '저택의 안방';
+    let atticUnlocked = false;
+
+    function attemptMove(place) {
+      if (currentLocation !== '저택의 안방') return;
+      moveTo(place);
     }
 
     function moveTo(place) {
-      document.getElementById("location").innerText = "현재 위치: " + place;
+      currentLocation = place;
+      document.getElementById('location').innerText = place;
+      document.getElementById('description').innerText = descriptions[place] || '이 곳은 설명이 없습니다.';
+
+      document.getElementById('attic-password-area').classList.add('hidden');
+      document.getElementById('attic-interact-area').classList.add('hidden');
+      document.getElementById('attic-examine-options').classList.add('hidden');
+      document.getElementById('item-description-area').classList.add('hidden');
+
+      if (place === '저택의 안방') {
+        document.getElementById('backToRoomBtn').classList.add('hidden');
+        showMoveButtons(true);
+        document.getElementById('move-buttons').classList.remove('hidden'); // ← 중요: 버튼 컨테이너 표시
+      } else {
+        document.getElementById('backToRoomBtn').classList.remove('hidden');
+        showMoveButtons(false);
+      }
+
+      if (place === '다락방') {
+        if (atticUnlocked) {
+          document.getElementById('attic-interact-area').classList.remove('hidden');
+        } else {
+          document.getElementById('attic-password-area').classList.remove('hidden');
+        }
+      }
+    }
+
+    function showMoveButtons(showAll) {
+      const moveButtons = document.getElementById('move-buttons').children;
+      for (let btn of moveButtons) {
+        btn.style.display = showAll ? 'block' : 'none';
+      }
+    }
+
+    function checkAtticPassword() {
+      const input = document.getElementById('attic-password').value.trim();
+      if (input === '4722') {
+        atticUnlocked = true;
+        alert('비밀번호가 맞았습니다! 다락방에 들어갈 수 있습니다.');
+        moveTo('다락방');
+      } else {
+        alert('비밀번호가 틀렸습니다.');
+      }
+    }
+
+    function toggleAtticExamine() {
+      document.getElementById('attic-examine-options').classList.toggle('hidden');
+    }
+
+    function atticExamine(item) {
+      if (item === '일기장') {
+        addItem('일기장의 찢어진 조각');
+        alert('일기장의 찢어진 조각을 얻었습니다.');
+      } else {
+        alert(`${item}에는 특별한 것이 없습니다.`);
+      }
+      document.getElementById('attic-examine-options').classList.add('hidden');
+    }
+
+    function addItem(itemName) {
+      if (!window.inventory.includes(itemName)) {
+        window.inventory.push(itemName);
+        setCookie('inventory', JSON.stringify(window.inventory), 7);
+        updateInventory();
+      }
+    }
+
+    function updateInventory() {
+      const itemsDiv = document.getElementById('items');
+      itemsDiv.innerHTML = '';
+      if (!window.inventory.length) {
+        itemsDiv.innerHTML = '<p class="text-gray-500">획득한 아이템이 없습니다.</p>';
+        return;
+      }
+      window.inventory.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'px-3 py-1 bg-gray-300 rounded cursor-pointer hover:bg-gray-400';
+        div.innerText = item;
+        div.onclick = () => interactWithItem(item);
+        itemsDiv.appendChild(div);
+      });
+    }
+
+    function interactWithItem(item) {
+      if (item === '일기장의 찢어진 조각') {
+        showItemDescription('P.63 지하실의 보안을 위해 매일 지하실 문의 비밀번호를 매일 보안실의 비밀번호와 같게 만들기로 했다.');
+      } else {
+        alert(item + '에는 특별한 설명이 없습니다.');
+      }
+    }
+
+    function showItemDescription(text) {
+      document.getElementById('item-description-text').innerText = text;
+      document.getElementById('item-description-area').classList.remove('hidden');
+      document.getElementById('move-buttons').classList.add('hidden');
+      document.getElementById('attic-interact-area').classList.add('hidden');
+      document.getElementById('attic-password-area').classList.add('hidden');
+      document.getElementById('backToRoomBtn').classList.add('hidden');
+    }
+
+    function closeItemDescription() {
+      document.getElementById('item-description-area').classList.add('hidden');
+      moveTo('저택의 안방');
     }
   </script>
 </body>
