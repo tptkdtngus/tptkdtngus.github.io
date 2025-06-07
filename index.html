@@ -64,57 +64,22 @@
       window.location.href = roleMap[role];
     }
 
-    // 쿠키 설정 함수 (7일 유지)
-    function setCookie(name, value, days) {
-      const d = new Date();
-      d.setTime(d.getTime() + days*24*60*60*1000);
-      document.cookie = `${name}=${value}; path=/; expires=${d.toUTCString()}`;
-    }
-
-    // 쿠키 가져오는 함수
-    function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if(parts.length === 2) return parts.pop().split(';').shift();
-      return null;
-    }
-
     window.addEventListener('DOMContentLoaded', () => {
       const audioContainer = document.getElementById('audio-container');
       const audioElem = audioContainer.querySelector('audio');
 
-      if(getCookie('음원재생') === 'true') {
-        // 쿠키가 있으면 음소거 상태로 자동 재생 시도
-        audioElem.muted = true;
-        const playPromise = audioElem.play();
+      // 반복 재생 설정
+      audioElem.loop = true;
 
-        if (playPromise !== undefined) {
-          playPromise.then(() => {
-            // 재생 성공 시 음소거 해제 및 플레이어 숨김
-            audioElem.muted = false;
-            audioContainer.classList.add('hidden');
-          }).catch(() => {
-            // 자동 재생 실패 시 음소거 해제, 플레이어 보임 유지
-            audioElem.muted = false;
-            audioContainer.classList.remove('hidden');
-          });
-        } else {
-          // play() 반환값 없으면 플레이어 숨김
-          audioContainer.classList.add('hidden');
-        }
-      } else {
-        // 처음 재생할 때 쿠키 저장 및 플레이어 숨김
-        audioElem.addEventListener('play', () => {
-          setCookie('음원재생', 'true', 7);
-          audioContainer.classList.add('hidden');
-          audioElem.muted = false;
-        }, { once: true });
-      }
+      // 재생 시작하면 플레이어 숨기기
+      audioElem.addEventListener('play', () => {
+        audioContainer.classList.add('hidden');
+      }, { once: true });
     });
   </script>
 
   <div id="audio-container">
-    <audio src="/음원/index.mp3" autoplay loop controls></audio>
+    <audio src="/음원/index.mp3" controls></audio>
   </div>
 </body>
 </html>
