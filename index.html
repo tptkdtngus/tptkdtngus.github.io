@@ -20,6 +20,14 @@
       font-size: 1.2em;
       cursor: pointer;
     }
+
+    /* 오른쪽 아래에 위치시키는 오디오 플레이어 */
+    .audio-player {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body>
@@ -43,8 +51,8 @@
     }
   </script>
 
-    <!-- 자동으로 무한 반복되는 음원 -->
-  <audio src="/음원/index.mp3" autoplay loop hidden></audio>
+  <!-- 자동 재생되고 오른쪽 아래에 표시되는 오디오 -->
+  <audio class="audio-player" src="/음원/index.mp3" autoplay loop controls></audio>
 
 </body>
 </html>
