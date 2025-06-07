@@ -1,31 +1,211 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>집사의 단서</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script type="text/javascript">
-      function shareHint() {
-        const list = document.getElementById('shared-hints');
-        const li = document.createElement('li');
-        li.innerText = '집사: 고양이의 이상 행동을 관찰했다.';
-        list.appendChild(li);
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>집사</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap" rel="stylesheet" />
+  <style>
+    .brush-font {
+      font-family: 'Nanum Brush Script', cursive;
+    }
+    #item-description {
+      padding: 1rem;
+      border-radius: 0.375rem; /* rounded-md */
+      min-height: 4rem;
+      color: #374151; /* 텍스트 진한 회색 */
+      white-space: pre-line; /* 줄바꿈 유지 */
+      margin-bottom: 1rem;
+      background-color: transparent;
+      transition: background-color 0.3s ease;
+    }
+    #item-description.has-desc {
+      background-color: #f3f4f6; /* 연한 회색 배경 */
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <main class="p-6 max-w-3xl mx-auto bg-white shadow-md rounded mt-10">
+    <header class="mb-8">
+      <h1 class="text-4xl brush-font text-gray-800">집사</h1>
+    </header>
+
+    <section id="intro">
+      <h2 class="text-2xl font-semibold mb-6">등장인물 소개</h2>
+      <div class="flex items-center bg-gray-50 rounded p-4 shadow">
+        <div class="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 text-sm mr-6">
+          사진 없음
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-2">집사</h3>
+          <p class="text-gray-700 leading-relaxed">
+            주인 일가를 모시는 집사.<br />
+            저택의 모든 문이 잠겼으나, 침착하게 상황을 해결하고 있는 중.
+          </p>
+        </div>
+      </div>
+      <button id="startBtn" class="mt-8 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">시작하기</button>
+    </section>
+
+    <section id="game" class="hidden mt-6">
+      <div class="mb-6 flex justify-between items-center">
+        <h2 class="text-xl font-semibold mb-2">현재 위치: <span id="location">2층 로비</span></h2>
+        <button id="backToLobbyBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 hidden">2층 로비로 돌아가기</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mb-6" id="move-buttons">
+        <button onclick="moveTo('집무실')" class="bg-gray-200 p-3 rounded hover:bg-gray-300">집무실</button>
+        <button onclick="moveTo('보안실')" class="bg-gray-200 p-3 rounded hover:bg-gray-300">보안실</button>
+        <button onclick="moveTo('지하실')" class="bg-gray-200 p-3 rounded hover:bg-gray-300">지하실</button>
+        <button onclick="moveTo('1층 로비')" class="bg-gray-200 p-3 rounded hover:bg-gray-300">1층 로비</button>
+      </div>
+
+      <div id="description" class="mb-6 p-4 bg-gray-50 rounded border border-gray-200 text-gray-700">
+        2층 로비입니다. 어디로 이동하시겠습니까?
+      </div>
+
+      <div id="inspection-buttons" class="mb-6 hidden">
+        <div id="office-interact-area" class="mb-4">
+          <button onclick="toggleOfficeExamine()" class="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500">살펴보기</button>
+          <div id="office-examine-options" class="mt-2 hidden">
+            <ul class="list-disc list-inside">
+              <li><button onclick="officeExamine('책상 서랍')" class="underline text-blue-600">책상 서랍</button></li>
+              <li><button onclick="officeExamine('책장')" class="underline text-blue-600">책장</button></li>
+              <li><button onclick="officeExamine('책상 위')" class="underline text-blue-600">책상 위</button></li>
+              <li><button onclick="officeExamine('바닥 요')" class="underline text-blue-600">바닥 요</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <section id="inventory" class="border-t pt-4">
+        <h3 class="text-lg font-semibold mb-3">아이템 창</h3>
+        <div id="items" class="flex flex-wrap gap-2 text-gray-800"></div>
+      </section>
+
+      <div id="item-description"></div>
+    </section>
+  </main>
+
+  <script>
+    let inventory = JSON.parse(localStorage.getItem('butlerItems') || '[]');
+
+    function saveItems() {
+      localStorage.setItem('butlerItems', JSON.stringify(inventory));
+      updateInventory();
+    }
+
+    function updateInventory() {
+      const itemsDiv = document.getElementById('items');
+      itemsDiv.innerHTML = '';
+      if (inventory.length === 0) {
+        itemsDiv.innerHTML = '<p class="text-gray-500">획득한 아이템이 없습니다.</p>';
+        return;
       }
-    </script>
-  </head>
-  <body class="bg-gray-100 min-h-screen">
-    <main class="p-4 max-w-xl mx-auto bg-white shadow rounded mt-10">
-      <h1 class="text-xl font-bold">내 역할: 집사</h1>
-      <p class="mt-4">단서: 고양이의 이상 행동을 관찰했다.</p>
-      <button onclick="shareHint()" class="mt-4 bg-green-500 text-white p-2 rounded">단서 공유하기</button>
-      <div class="mt-6">
-        <h2 class="text-lg font-semibold mb-2">공유된 단서들</h2>
-        <ul id="shared-hints" class="list-disc list-inside space-y-1"></ul>
-      </div>
-      <div class="mt-6">
-        <a href="index.html" class="text-blue-500 underline">처음으로 돌아가기</a>
-      </div>
-    </main>
-  </body>
+      inventory.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'px-3 py-1 bg-gray-300 rounded cursor-pointer hover:bg-gray-400';
+        div.innerText = item.name;
+        div.onclick = () => interactWithItem(item.name);
+        itemsDiv.appendChild(div);
+      });
+    }
+
+    function interactWithItem(item) {
+      const descDiv = document.getElementById('item-description');
+      if (item === '집 주인의 일기장') {
+        descDiv.innerText = '20##. ##. ##. 아가씨 놀아주기 위해 보안실의 비밀번호를 규칙에 맞춰 정하기로 했다.';
+      } else if (item === '아가씨의 노트') {
+        descDiv.innerText = `[5일전 2 + 3 = 11 비밀번호: 11]
+[4일전 3 + 4 = 19 비밀번호: 19]
+[3일전 4 + 5 = 29 비밀번호: 29]
+[2일전 5 + 6 = 41 비밀번호: 41]
+[1일전 6 + 7 = 55 비밀번호: 55]
+[오늘 # # # # ## (물에 젖어 뒷 부분이 보이지 않는다)]`;
+      } else {
+        descDiv.innerText = item + '에는 특별한 설명이 없습니다.';
+      }
+      if (descDiv.innerText.trim().length > 0) {
+        descDiv.classList.add('has-desc');
+      } else {
+        descDiv.classList.remove('has-desc');
+      }
+    }
+
+    document.getElementById('startBtn').onclick = () => {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('game').classList.remove('hidden');
+      updateInventory();
+      moveTo('2층 로비');
+    };
+
+    const descriptions = {
+      '2층 로비': '2층 로비입니다. 어디로 이동하시겠습니까?',
+      '집무실': '무엇을 살펴보시겠습니까?',
+      '보안실': '보안실입니다. 다시 2층 로비로 돌아갑니다.',
+      '지하실': '지하실입니다. 다시 2층 로비로 돌아갑니다.',
+      '1층 로비': '1층 로비입니다. 다시 2층 로비로 돌아갑니다.'
+    };
+
+    function moveTo(location) {
+      document.getElementById('location').innerText = location;
+      document.getElementById('description').innerText = descriptions[location] || '설명 없음';
+
+      const buttons = document.getElementById('move-buttons');
+      const inspect = document.getElementById('inspection-buttons');
+      const backBtn = document.getElementById('backToLobbyBtn');
+      const descDiv = document.getElementById('item-description');
+
+      descDiv.innerText = '';
+      descDiv.classList.remove('has-desc');
+
+      if (location === '2층 로비') {
+        buttons.classList.remove('hidden');
+        inspect.classList.add('hidden');
+        backBtn.classList.add('hidden');
+      } else if (location === '집무실') {
+        buttons.classList.add('hidden');
+        inspect.classList.remove('hidden');
+        backBtn.classList.remove('hidden');
+      } else {
+        buttons.classList.add('hidden');
+        inspect.classList.add('hidden');
+        backBtn.classList.remove('hidden');
+      }
+    }
+
+    document.getElementById('backToLobbyBtn').onclick = () => {
+      moveTo('2층 로비');
+    };
+
+    function toggleOfficeExamine() {
+      const options = document.getElementById('office-examine-options');
+      options.classList.toggle('hidden');
+    }
+
+    function officeExamine(place) {
+      if (place === '책상 위') {
+        addItem('집 주인의 일기장', '20##. ##. ##. 아가씨 놀아주기 위해 보안실의 비밀번호를 규칙에 맞춰 정하기로 했다.');
+      } else if (place === '바닥 요') {
+        addItem('아가씨의 노트', `[5일전 2 + 3 = 11 비밀번호: 11]
+[4일전 3 + 4 = 19 비밀번호: 19]
+[3일전 4 + 5 = 29 비밀번호: 29]
+[2일전 5 + 6 = 41 비밀번호: 41]
+[1일전 6 + 7 = 55 비밀번호: 55]
+[오늘 # # # # ## (물에 젖어 뒷 부분이 보이지 않는다)]`);
+      } else {
+        alert(`${place}에는 특별한 것이 없습니다.`);
+      }
+    }
+
+    function addItem(name, desc) {
+      if (!inventory.some(i => i.name === name)) {
+        inventory.push({ name, desc });
+        saveItems();
+        alert(`${name}을(를) 얻었습니다.`);
+      }
+    }
+  </script>
+</body>
 </html>
