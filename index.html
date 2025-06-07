@@ -64,12 +64,14 @@
       window.location.href = roleMap[role];
     }
 
+    // 쿠키 설정 함수 (7일 유지)
     function setCookie(name, value, days) {
       const d = new Date();
       d.setTime(d.getTime() + days*24*60*60*1000);
       document.cookie = `${name}=${value}; path=/; expires=${d.toUTCString()}`;
     }
 
+    // 쿠키 가져오는 함수
     function getCookie(name) {
       const value = `; ${document.cookie}`;
       const parts = value.split(`; ${name}=`);
@@ -82,17 +84,30 @@
       const audioElem = audioContainer.querySelector('audio');
 
       if(getCookie('음원재생') === 'true') {
-        // 쿠키 있으면 재생 시도 후 플레이어 숨김
+        // 쿠키가 있으면 음소거 상태로 자동 재생 시도
+        audioElem.muted = true;
         const playPromise = audioElem.play();
+
         if (playPromise !== undefined) {
-          playPromise.catch(() => {}); // 실패해도 무시
+          playPromise.then(() => {
+            // 재생 성공 시 음소거 해제 및 플레이어 숨김
+            audioElem.muted = false;
+            audioContainer.classList.add('hidden');
+          }).catch(() => {
+            // 자동 재생 실패 시 음소거 해제, 플레이어 보임 유지
+            audioElem.muted = false;
+            audioContainer.classList.remove('hidden');
+          });
+        } else {
+          // play() 반환값 없으면 플레이어 숨김
+          audioContainer.classList.add('hidden');
         }
-        audioContainer.classList.add('hidden');
       } else {
-        // 재생 시작시 쿠키 저장하고 플레이어 숨기기
+        // 처음 재생할 때 쿠키 저장 및 플레이어 숨김
         audioElem.addEventListener('play', () => {
           setCookie('음원재생', 'true', 7);
           audioContainer.classList.add('hidden');
+          audioElem.muted = false;
         }, { once: true });
       }
     });
