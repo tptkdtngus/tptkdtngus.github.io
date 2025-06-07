@@ -7,59 +7,59 @@
   <style>
     body {
       font-family: sans-serif;
-      padding: 50px;
       margin: 0;
-
+      padding: 0;
+      
       /* 배경 이미지 */
       background-image: url('image/index.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-
-      /* 화면 꽉 차게 */
+      
       min-height: 100vh;
-
-      /* flex 레이아웃: 왼쪽 버튼 영역과 중앙 텍스트 영역 */
       display: flex;
-      flex-direction: row;
+      justify-content: flex-start;
       align-items: flex-start;
-      gap: 40px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      padding: 50px;
+      gap: 20px;
+    }
+
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+      background-color: rgba(0, 0, 0, 0.6); /* 반투명 배경 */
+      padding: 30px 40px;
+      border-radius: 12px;
+      user-select: none;
     }
 
     h1 {
       font-size: 2.5em;
       color: white;
-      padding: 20px 30px;
-      background-color: rgba(0, 0, 0, 0.6); /* 반투명 검정 배경 */
-      border-radius: 10px;
-      flex: 1; /* 오른쪽 텍스트 영역 크게 차지 */
       margin: 0;
-      align-self: center; /* 세로 가운데 정렬 */
-      user-select: none;
-    }
-
-    /* 버튼 영역을 따로 박스로 만들어 왼쪽에 세로로 정렬 */
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      width: 200px;
     }
 
     .role-button {
+      width: 220px;
       padding: 12px 25px;
       font-size: 1.2em;
-      cursor: not-allowed; /* 기본은 비활성화 커서 */
-      opacity: 0.5;       /* 비활성화 시 희미하게 */
-      pointer-events: none; /* 클릭 불가 */
-      transition: opacity 0.3s ease;
+      cursor: not-allowed;
+      opacity: 0.5;
+      pointer-events: none;
       border-radius: 6px;
       border: none;
       background-color: rgba(255, 255, 255, 0.85);
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      user-select: none;
+      transition: opacity 0.3s ease;
     }
-    /* 활성화 시 스타일 */
+
     .role-button.enabled {
       cursor: pointer;
       opacity: 1;
@@ -72,6 +72,13 @@
     .role-button.enabled:hover {
       background-color: #45a049;
       box-shadow: 0 6px 14px rgba(69,160,73,0.8);
+    }
+
+    /* 버튼들을 세로 정렬 */
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
 
     /* 오디오 플레이어 위치: 화면 상단 중앙, 크기 키움 */
@@ -88,14 +95,13 @@
       user-select: none;
     }
     #audio-container audio {
-      width: 300px; /* 크기 키움 */
+      width: 300px;
       height: 40px;
       outline: none;
       border-radius: 6px;
       background-color: transparent;
     }
 
-    /* 숨길 때 부드럽게 사라지도록 */
     #audio-container.hidden {
       opacity: 0;
       visibility: hidden;
@@ -105,15 +111,18 @@
   </style>
 </head>
 <body>
-  <div class="button-container">
-    <button class="role-button" onclick="goToRole('김동남')">김동남</button>
-    <button class="role-button" onclick="goToRole('길 고양이')">길 고양이</button>
-    <button class="role-button" onclick="goToRole('집사')">집사</button>
-    <button class="role-button" onclick="goToRole('집주인의 딸')">집주인의 딸</button>
-    <button class="role-button" onclick="goToRole('요리사')">요리사</button>
+  <div class="container">
+    <div class="left-panel">
+      <h1>역할을 선택하세요</h1>
+      <div class="button-container">
+        <button class="role-button" onclick="goToRole('김동남')">김동남</button>
+        <button class="role-button" onclick="goToRole('길 고양이')">길 고양이</button>
+        <button class="role-button" onclick="goToRole('집사')">집사</button>
+        <button class="role-button" onclick="goToRole('집주인의 딸')">집주인의 딸</button>
+        <button class="role-button" onclick="goToRole('요리사')">요리사</button>
+      </div>
+    </div>
   </div>
-
-  <h1>역할을 선택하세요</h1>
 
   <script>
     function goToRole(role) {
@@ -132,12 +141,8 @@
       const audioElem = audioContainer.querySelector('audio');
       const buttons = document.querySelectorAll('.role-button');
 
-      // 오디오 반복 재생 설정
       audioElem.loop = true;
 
-      // 처음엔 버튼 비활성화 (위에 CSS로 설정됨)
-
-      // 오디오 재생 이벤트 발생 시 버튼 활성화 + 플레이어 숨김
       audioElem.addEventListener('play', () => {
         buttons.forEach(btn => btn.classList.add('enabled'));
         audioContainer.classList.add('hidden');
