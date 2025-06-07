@@ -10,9 +10,11 @@
       text-align: center;
       padding: 50px;
     }
+
     h1 {
       font-size: 2em;
     }
+
     .role-button {
       display: block;
       margin: 10px auto;
@@ -21,12 +23,16 @@
       cursor: pointer;
     }
 
-    /* 오른쪽 아래에 위치시키는 오디오 플레이어 */
-    .audio-player {
+    /* 오른쪽 아래 고정되는 오디오 플레이어 */
+    #audio-container {
       position: fixed;
-      bottom: 10px;
-      right: 10px;
+      bottom: 20px;
+      right: 20px;
       z-index: 1000;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 5px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
   </style>
 </head>
@@ -51,8 +57,10 @@
     }
   </script>
 
-  <!-- 자동 재생되고 오른쪽 아래에 표시되는 오디오 -->
-  <audio class="audio-player" src="/음원/index.mp3" autoplay loop controls></audio>
+  <!-- 오디오 플레이어가 오른쪽 아래에 표시됨 -->
+  <div id="audio-container">
+    <audio src="/음원/index.mp3" autoplay loop controls></audio>
+  </div>
 
 </body>
 </html>
