@@ -33,14 +33,14 @@
       padding: 5px;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      transition: opacity 0.5s ease;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
     }
 
     /* 숨길 때 부드럽게 사라지도록 */
     #audio-container.hidden {
       opacity: 0;
-      pointer-events: none;
       visibility: hidden;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -68,8 +68,7 @@
       const audioContainer = document.getElementById('audio-container');
       const audioElem = audioContainer.querySelector('audio');
 
-      // 반복 재생 설정
-      audioElem.loop = true;
+      audioElem.loop = true; // 반복 재생 설정
 
       // 재생 시작하면 플레이어 숨기기
       audioElem.addEventListener('play', () => {
